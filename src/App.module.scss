@@ -1,0 +1,68 @@
+* {
+  padding: 0%;
+  margin: 0%;
+  font-family: poppins, sans-serif;
+  box-sizing: border-box;
+  outline: none;
+}
+
+body {
+    margin: 0;
+    display: flexbox;
+    place-items: center;
+    min-width: 320px;
+    min-height: 100vh;
+  }
+
+  
+.container {//divdir en container para login y register y otro para
+  margin-top: 100px;//50
+  height: 678px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #88a5ff;
+}
+
+.container_general {//test
+  margin-top: 50px;//50
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: calc(100vh - 50px); // Ajusta la altura del contenedor según el tamaño de la pantalla
+  background-color: #88a5ff;
+}
+
+*::selection {
+  background-color: #6358dc;
+  color: white;
+}
+
+.card {
+  padding: 2em;
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.main {
+ //margin-top: 50px;
+  overflow: hidden;
+  transition: all 0.35s ease-in-out;
+  background-color: #6088ff
+  ;
+}
+

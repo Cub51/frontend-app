@@ -30,6 +30,7 @@ const ProfileState = (props) => {
             const res = await axios.get(`http://localhost:4000/profile/getProfile/${userId}`, {
                 // headers para enviar el token
                 headers: {
+                    'Content-Type': 'application/json',
                     Authorization: `Bearer ${localStorage.getItem("token")}`,
 
                 },

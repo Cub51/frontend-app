@@ -1,7 +1,6 @@
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import { useState } from 'react';
 
-import UserList from './components/UsersList/UserList';
 import ProfileComp from './components/Profile/Profile';
 
 //context
@@ -18,6 +17,10 @@ import DashboardSt from './Pages/Dashboard/Dashboard';
 
 /* The following line can be included in a src/App.scss */
 import 'bootstrap/dist/css/bootstrap.min.css';
+
+// componentes
+import UsersTeacherList from './components/UsersList/UserListTeacher';
+import UsersAdminList from './components/UsersList/UserListAdmin';
 
 //pages
 import Curses from './Pages/Curses/Curses';
@@ -66,29 +69,32 @@ function App() {
 
 
 
-        <div style={{ backgroundColor: '#6088ff' }}> {/* Revisar CONTAINER quitar limitaciones para practica,
+        <div style={{ backgroundColor: '#ffffff' }}> {/* Revisar CONTAINER quitar limitaciones para practica,
         se arregla problema de posicion de puntero para clase lab 
         eliminar cualquier configuracion solo para el lab trabajar con configuraciones propias dentro de los botons*/}
           <UserLoginState >
             <ProfileState>
-              < CursoState>
+              <CursoState>
                 <PracticaState>
-
+                <UserState>
                   <Routes>
-                   
+                  
                     <Route path="/" element={<Home />} />
                     <Route path="/about" element={<About />} />
-                    <Route path="/users" element={<Users />} />
+                    
                     <Route path="/register" element={<Register />} />
                     <Route path="/courses/mycourses" element={<MyCourses />} />
-
-                    <Route path="/coursesDetalle/:id" element={<CursoDetalle/>} />
+                    
+                    
+                    <Route path="/coursesDetalle" element={<CursoDetalle/>} />
                     <Route path="*" element={<PageNotFound />} />
                     <Route path="/dashboard" element={<DashboardSt />} />
 
                     <Route path="/login" element={<Login />} />
 
-
+                    <Route path="/usersList/students" element={<Users />} />
+                    <Route path="/usersList/teachers" element={<UsersTeacherList />} />
+                    <Route path="/usersList/admins" element={<UsersAdminList />} />
 
 
                     <Route path="/lab" element={<Lab />} />
@@ -101,6 +107,7 @@ function App() {
                     <Route path="/welcome/:id" element={<Welcome />} />
 
                   </Routes>
+                  </UserState>
                 </PracticaState>
               </CursoState>
             </ProfileState>

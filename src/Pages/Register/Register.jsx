@@ -84,6 +84,7 @@ const Register = () => {
 
   return (
     <>
+     <div className={styles.container_general}>
       <div className={styles.formContainer}>
         <h3>Eres estudiante! </h3>
         <h2> Registra tu cuenta</h2>
@@ -202,7 +203,7 @@ const Register = () => {
         </form>
       </div>
       {mensaje && <div className={styles.toast}>{mensaje}</div>}
-
+      </div>
     </>
   );
 };

@@ -13,7 +13,7 @@ const cursoReducer = (state, action) => {
         case GET_CURSOS_USUARIO:
             return {
                 ...state,
-                cursos_usuario: payload,
+                cursos_usuario:  payload,
                 loading: false
             }
         case GET_CURSO:
@@ -25,7 +25,7 @@ const cursoReducer = (state, action) => {
         case ADD_CURSO:
             return {
                 ...state,
-                cursos: [...state.cursos, payload],
+                cursos_usuario: [...state.cursos_usuario, payload],
                 loading: false
             }
         case UPDATE_CURSO:

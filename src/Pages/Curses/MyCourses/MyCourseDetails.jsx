@@ -3,14 +3,12 @@ import { useContext, useEffect, useState } from 'react';
 import PracticaContext from '../../../context/Practica/PracticaContext';
 import CursoContext from '../../../context/Curso/CursoContext';
 import { useParams } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
-//import styles from '../../../components/styles.module.scss';
 
-
+import styles from '../../../components/styles.module.scss';
 
 const CursoDetalle = () => {
-    // Obtiene el estado de las prácticas
-    const { id } = useParams();
 
     const [objetivos, setObjetivos] = useState(['']);
 
@@ -22,7 +20,22 @@ const CursoDetalle = () => {
         titulo: '',
         objetivo: ['',],
         actividad: ['',],
-        estado: '',
+        estado: {
+            "attrs": {
+                "width": 1027,
+                "height": 730
+            },
+            "className": "Stage",
+            "children": [
+                {
+                    "className": "Layer",
+                    "children": [
+
+
+                    ]
+                }
+            ]
+        },
         cursoId: '',
         createdAt: '',
     });
@@ -55,9 +68,9 @@ const CursoDetalle = () => {
 
     const handleAddObjetivo = () => {
         setInputs({
-                ...inputs,
-                objetivo: [...objetivo, '']
-            })
+            ...inputs,
+            objetivo: [...objetivo, '']
+        })
         // setObjetivos([...objetivos, '']);
     };
 
@@ -100,10 +113,10 @@ const CursoDetalle = () => {
         });
     };
 
-    const handleInputChangeEstado = (event) => {
+    const handleInputChangeEstado = (defaultEstado) => {
         setInputs({
             ...inputs,
-            estado: event.target.value
+            estado: defaultEstado
         });
     };
 
@@ -116,6 +129,7 @@ const CursoDetalle = () => {
     };
 
 
+
     const handleSubmint = (event) => {
         event.preventDefault();
         console.log('Objetivos enviados:', objetivo);
@@ -125,6 +139,7 @@ const CursoDetalle = () => {
         handleClose();
     }
 
+    const navigate = useNavigate();
 
 
 
@@ -153,53 +168,59 @@ const CursoDetalle = () => {
         getPracticasEstadoByCurso,
     } = useContext(PracticaContext);
 
+
+
     const {
         curso,
         getCurso,
         getCursos,
     } = useContext(CursoContext);
 
-    const cursoIdParams = id;
 
     useEffect(() => {
-        console.log('curso ID detal ', cursoIdParams);
+        getCurso(localStorage.getItem('curso_id'));
+        // Cadena JSON que representa el objeto inicial
+        const deffault = "{\"attrs\": {\"width\": 1027, \"height\": 730 }, \"className\": \"Stage\", \"children\": [ { \"className\": \"Layer\", \"children\": [ { \"attrs\": { \"x\": 444, \"y\": 99, \"width\": 100, \"height\": 100, \"fill\": \"#d058eb\", \"id\": \"0\", \"draggable\": true }, \"className\": \"Rect\" }, { \"attrs\": { \"flipEnabled\": false }, \"className\": \"Transformer\" } ] } ] }";
 
-        // Obtiene las prácticas dependiendo del rol del usuario
-        console.log('curso item ', curso);
+        // Parsear la cadena JSON a un objeto JavaScript
+        const initialState = JSON.parse(deffault);
 
-        console.log('curso item2 ', curso);
+        // Llamar a la función para manejar el cambio de estado
+        handleInputChangeEstado(initialState);
+        console.log("suer ID PRACTICA", JSON.parse(localStorage.getItem("usuario"))._id);
+        handleInputChangeCursoId_CreatedAt(localStorage.getItem('curso_id'), JSON.parse(localStorage.getItem("usuario"))._id);
+        console.log("id p ", localStorage.getItem('curso_id'), "user ", JSON.parse(localStorage.getItem("usuario"))._id, "estado", estado);
 
         if (localStorage.getItem("rol") === 'Estudiante') {
-
             getPracticasByEstudiante();
-        } else if (localStorage.getItem("rol") === 'Profesor') {
+        } else if (localStorage.getItem("rol") != 'Estudiante') {
 
-            getPracticasByCurso(cursoIdParams);
-            
+            getPracticasByCurso(localStorage.getItem('curso_id'));
+
 
         }
     }
-        , []);
+        , [getPracticasByCurso]);
 
     return (
         <>
-            <div className="container mt-5 " style={{ backgroundColor: '#6088ff' }}>
-                <div style={{ marginTop: '100px' }}>
+            <div className={styles.container_curs__list} style={{ backgroundColor: '#8f8f8f' }}>
+                <div style={{ marginTop: '50px' }}>
 
                 </div>
                 <div className="text-center">
 
-                    <h2 className="text-2xl font-bold" style={{ color: 'whitesmoke' }}>{curso.nombreCurso}</h2>
-                    <p className="text-lg text-red-500" style={{ color: 'darkblue' }}>{curso.cursoDescripcion}</p>
+                    <h2 className="text-2xl font-bold" style={{ color: 'whitesmoke', marginTop: '100px' }}>{curso.nombreCurso}</h2>
+                    <p className="text-lg text-red-500" style={{ color: 'darkblue', }}>{curso.cursoDescripcion}</p>
                 </div>
 
                 {console.log('App.js', localStorage.getItem("rol"))}
                 {
-                    localStorage.getItem("rol") === 'Profesor' ? (
-                        //VISTA PROFESOR
+                    localStorage.getItem("rol") != 'Estudiante' ? (
+                        //VISTA PROFESOR y ADMINISTRADOR
                         // test creador de practicas id 65d17ec683900a5ef10887de
 
-                        <div className="container mt-5 " style={{ backgroundColor: '#6088ff' }}>
+                        <div className="container-fluid mt-5" style={{ backgroundColor: '#8f8f8f' }}>
                             <div>
                                 {console.log('App.js', localStorage.getItem("rol"))}
                                 {
@@ -211,10 +232,11 @@ const CursoDetalle = () => {
                                     </Button>
                                 }
                             </div>
-
-                            <Card className="mt-4" style={{ backgroundColor: '#6088ff' }}>
+                            {console.log("CURSO ADMINISTRSO", practicas_course)}
+                            <Card className="mt-4" style={{ backgroundColor: 'gray' }}>
                                 <Card.Body >
                                     <Card.Title style={{ color: 'whitesmoke' }}>Asignaciones</Card.Title>
+
                                     {practicas_course.map((practica_user) => (
                                         <Card key={practica_user._id} className="mb-3">
                                             <Card.Body style={{ backgroundColor: '#eaeaea' }}>
@@ -223,14 +245,14 @@ const CursoDetalle = () => {
                                                 </Card.Title>
                                                 <Card.Text style={{ color: 'gray' }}>
 
-                                                    {practica_user._id}
+                                                    { /*practica_user._id */}
                                                     {practica_user.curso.nombreCurso}
 
                                                 </Card.Text>
                                             </Card.Body>
                                             <Button variant='primary' onClick={() => {
                                                 mostrarAlerta(`Asignación: ${practica_user.titulo}`);
-                                                getPracticasEstadoByCurso(cursoIdParams);
+                                                getPracticasEstadoByCurso(localStorage.getItem('curso_id'));
                                             }
                                             }>
                                                 Ver Asignaciones por Estudiante
@@ -251,23 +273,29 @@ const CursoDetalle = () => {
                                                     Calificación:  :
                                                     {practica_user_es.calificacion}
                                                     <Card.Text style={{ color: 'red' }}>
-                                                        {practica_user_es.userId}
+                                                        {/* practica_user_es.userId */}
 
                                                     </Card.Text>
                                                     <Card.Text style={{ color: 'red' }}>
-                                                        {
+                                                        {/*
                                                             practica_user_es.estado.map((est, index) => (
                                                                 <Card.Text key={index} style={{ color: 'blue' }}>
                                                                     {est.type}
                                                                 </Card.Text>
-                                                            ))
+                                                            ))*/
                                                         }
 
 
                                                     </Card.Text>
                                                 </Card.Text>
                                             </Card.Body>
+                                            { }
                                             <Button variant='primary' onClick={() => {
+                                                // Store the estado value in local storage
+                                                localStorage.setItem('practica_estado', JSON.stringify(practica_user_es));
+                                                { console.log(" con: ", practica_user_es); }
+                                                // Redirect to http://localhost:5173/labDT
+                                                navigate('/labDT', { replace: true });
                                                 mostrarAlerta(`Asignación: ${practica_user_es.practicaAsignada.titulo}`);
                                             }
                                             }>
@@ -284,24 +312,24 @@ const CursoDetalle = () => {
                                         <h4 className="text-lg font-bold mb-2">Actividades del Año Académico</h4>
                                     </Card.Header>
                                     <ListGroup variant="flush">
-                                        <ListGroup.Item>Introducción al Desarrollo Web</ListGroup.Item>
-                                        <ListGroup.Item>Bases de HTML</ListGroup.Item>
-                                        <ListGroup.Item>Estilización con CSS</ListGroup.Item>
-                                        <ListGroup.Item>Fundamentos de JavaScript</ListGroup.Item>
-                                        <ListGroup.Item>Desarrollo de Proyectos</ListGroup.Item>
-                                        <ListGroup.Item>Entrega del Proyecto Final</ListGroup.Item>
+                                        <ListGroup.Item>Introducción al Dibujo Técnico</ListGroup.Item>
+                                        <ListGroup.Item>Instrumentos y Materiales</ListGroup.Item>
+                                        <ListGroup.Item>Normas y Convenciones</ListGroup.Item>
+                                        <ListGroup.Item>Dibujo de Líneas y Formas Básicas</ListGroup.Item>
                                     </ListGroup>
                                 </Card>
                             </div>
 
+                           {/*
                             <div className="mt-4">
 
                                 <div className=" text-end mt-4" >
                                     <Button variant='primary' onClick={() => mostrarAlertaBootstrap(`Profesor: PEPE`)}>
-                                        Info Profesor Encargado
+                                    Lista de estudiantes
                                     </Button>
                                 </div>
                             </div>
+                           */}
                             <div className="container" style={{ margin: '20px' }}>
 
                             </div>
@@ -313,19 +341,19 @@ const CursoDetalle = () => {
                     ) :
                         (
                             // VISTA ESTUDIANTE
-                            <div className="container mt-5 " style={{ backgroundColor: '#6088ff' }}>
+                            <div className="container mt-5 " style={{ backgroundColor: '#8f8f8f' }}>
                                 <div >
                                     {console.log('App.js', localStorage.getItem("rol"))}
-                                    {
+                                    {/*
                                         (
                                             <Button variant='primary' onClick={() => mostrarAlerta(`Curso: ${curso.nombreCurso}`)}>
-                                                Matricularse
+                                                Regresar
                                             </Button>
-                                        )
+                                        )*/
                                     }
                                 </div>
 
-                                <Card className="mt-4" style={{ backgroundColor: '#6088ff' }}>
+                                <Card className="mt-4" style={{ backgroundColor: 'gray' }}>
                                     <Card.Body >
                                         <Card.Title style={{ color: 'whitesmoke' }}>Asignaciones</Card.Title>
                                         {practicas_user.map((practica_user, index) => (
@@ -336,12 +364,18 @@ const CursoDetalle = () => {
                                                     </Card.Title>
                                                     <Card.Text style={{ color: 'gray' }}>
 
-                                                        {practica_user.practicaAsignada}
+                                                        {/*practica_user.practicaAsignada*/}
                                                         {practica_user.practicaAsignada.curso}
 
                                                     </Card.Text>
                                                 </Card.Body>
-                                                <Button variant='primary' onClick={() => mostrarAlerta(`Asignación: `)}>
+                                                <Button variant='primary' onClick={() => {
+                                                    mostrarAlerta(`Asignación: `)
+                                                    // estado dentro de local storage
+                                                    localStorage.setItem('practica_estado', JSON.stringify(practica_user));
+                                                    // Redirect to http://localhost:5173/labDT
+                                                    navigate('/labDT', { replace: true });
+                                                }}>
                                                     Realizar Asignación
                                                 </Button>
                                             </Card>
@@ -355,24 +389,22 @@ const CursoDetalle = () => {
                                             <h4 className="text-lg font-bold mb-2">Actividades del Año Académico</h4>
                                         </Card.Header>
                                         <ListGroup variant="flush">
-                                            <ListGroup.Item>Introducción al Desarrollo Web</ListGroup.Item>
-                                            <ListGroup.Item>Bases de HTML</ListGroup.Item>
-                                            <ListGroup.Item>Estilización con CSS</ListGroup.Item>
-                                            <ListGroup.Item>Fundamentos de JavaScript</ListGroup.Item>
-                                            <ListGroup.Item>Desarrollo de Proyectos</ListGroup.Item>
-                                            <ListGroup.Item>Entrega del Proyecto Final</ListGroup.Item>
+                                            <ListGroup.Item>Introducción al Dibujo Técnico</ListGroup.Item>
+                                            <ListGroup.Item>Instrumentos y Materiales</ListGroup.Item>
+                                            <ListGroup.Item>Normas y Convenciones</ListGroup.Item>
+                                            <ListGroup.Item>Dibujo de Líneas y Formas Básicas</ListGroup.Item>
                                         </ListGroup>
                                     </Card>
                                 </div>
 
-                                <div className="mt-4">
+                              {/**  <div className="mt-4">
 
                                     <div className=" text-end mt-4" >
                                         <Button variant='primary' onClick={() => mostrarAlertaBootstrap(`Profesor: `)}>
-                                            Info Profesor Encargado
+                                            Lista de estudiantes
                                         </Button>
                                     </div>
-                                </div>
+                                </div> */}
                                 <div className="container" style={{ margin: '20px' }}>
 
                                 </div>
@@ -395,12 +427,12 @@ const CursoDetalle = () => {
 
                         <Form.Group controlId="formPracticaNombre">
                             <Form.Label>Nombre de la Práctica</Form.Label>
-                            <Form.Control 
-                            value={titulo}
-                            name='titulo'
-                            type="text" 
-                            placeholder="Ingrese el nombre de la práctica" 
-                            onChange={(event) => handleInputChangeAll(event)}
+                            <Form.Control
+                                value={titulo}
+                                name='titulo'
+                                type="text"
+                                placeholder="Ingrese el nombre de la práctica"
+                                onChange={(event) => handleInputChangeAll(event)}
                             />
                         </Form.Group>
 
@@ -446,7 +478,10 @@ const CursoDetalle = () => {
                             <Button variant="primary" onClick={handleAddActividad}>Agregar otra actividad</Button>
                         </Form.Group>
 
-                        <Button variant="primary" type="submit">
+                        <Button variant="primary" type="submit" onClick={() => {
+                            { console.log("uinputospractuca", inputs) }
+                            addPractica(titulo, objetivo, actividad, estado, cursoId, createdAt);
+                        }} >
                             Guardar
                         </Button>
 

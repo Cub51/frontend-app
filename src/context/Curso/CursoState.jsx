@@ -11,6 +11,7 @@ const CursoState = (props) => {
         cursos_usuario: [],
         curso: null,
         loading: true,
+        message: null,
         error: {},
         errorCurso: null, //validar si el curso ya esta matriculado
     };
@@ -37,6 +38,26 @@ const CursoState = (props) => {
         }
     };
 
+    const getCursosTeacher = async () => {
+        try {
+        
+            const id = JSON.parse(localStorage.getItem("usuario"))._id;
+            const res = await axios.get(`http://localhost:4000/curso/get-courses-teacher/${id}`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem("token")}`
+                }
+            });
+            console.log('teacher cursos ', res.data);
+            dispatch({
+                type: "GET_CURSOS_USUARIO",
+                payload: res.data.courses
+            });
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
     // Get Curso
     const getCurso = async (id) => {
         try {
@@ -47,7 +68,7 @@ const CursoState = (props) => {
                     'Authorization': `Bearer ${localStorage.getItem("token")}`
                 }
             });
-           console.log('res.data.course ', res.data.course);
+            console.log('res.data.course ', res.data.course);
             dispatch({
                 type: "GET_CURSO",
                 payload: res.data.course
@@ -61,18 +82,19 @@ const CursoState = (props) => {
     // Add Curso
     const addCurso = async (curso) => {
         try {
+            console.log("curso add ", curso);
             const res = await axios.post(`http://localhost:4000/curso/post-course/`, {
 
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${localStorage.getItem("token")}`
                 },
-                body: JSON.stringify(curso)
+                body: curso
             });
-            const data = await res.json();
+            console.log("res add ", res);
             dispatch({
                 type: "ADD_CURSO",
-                payload: data
+                payload: res.data.result
             });
         } catch (err) {
             console.error(err);
@@ -84,18 +106,16 @@ const CursoState = (props) => {
     // REVISAR  AÑADIR EN BACKEND
     const updateCurso = async (curso) => {
         try {
-            const res = await axios.put(`http://localhost:4000/curso/updateCurso/${curso._id}`, {
-
+            const res = await axios.put(`http://localhost:4000/curso/update/`, curso, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${localStorage.getItem("token")}`
                 },
-                body: JSON.stringify(curso)
             });
-            const data = await res.json();
+            console.log("res curso update ", res);
             dispatch({
                 type: "UPDATE_CURSO",
-                payload: data
+                payload: res.data.courseUpdate
             });
         }
         catch (err) {
@@ -107,8 +127,7 @@ const CursoState = (props) => {
     const deleteCurso = async (id) => {
         try {
             // REVISAR PARA BORRADO LOGICO O FISICO
-            const res = await axios.delete(`http://localhost:4000/curso/deleteCurso/${id}`, {
-
+            const res = await axios.delete(`http://localhost:4000/curso/delete/${id}`, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${localStorage.getItem("token")}`
@@ -117,7 +136,7 @@ const CursoState = (props) => {
             //const data = await res.json();
             dispatch({
                 type: "DELETE_CURSO",
-                payload: res.id
+                payload: res.data.course
             });
         } catch (err) {
             console.error(err);
@@ -132,30 +151,26 @@ const CursoState = (props) => {
             const res = await axios.put(`http://localhost:4000/enroll/mat/`, {
                 userId: userId,
                 cursoId: id,
+                rol: usuario.rol,
             },
-            {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem("token")}`
-                },
-              
+                {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem("token")}`
+                    },
+                });
 
-            });
             console.log('res ', res);// obtener mensaje de respuesta y presentarlo en pantalla
-          if (res.data.enroll) {
-            dispatch({
-                type: "MATRICULARSE_CURSO",
-                payload: { errorCurso : res.data.text }
-            });
-            } else if (res.data.result){
+            if (res.data.enroll) {
                 dispatch({
                     type: "MATRICULARSE_CURSO",
-                    payload: {cursos_usuario: res.data.result }
+                    payload: { errorCurso: res.data.text }
+                });
+            } else if (res.data.result) {
+                dispatch({
+                    type: "MATRICULARSE_CURSO",
+                    payload: { cursos_usuario: res.data.result }
                 });
             }
-           
-          
-      
-        
 
         } catch (err) {
             console.error(err);
@@ -166,32 +181,32 @@ const CursoState = (props) => {
     const listarCursosMatriculados = async () => {
         try {
             const usuario = JSON.parse(localStorage.getItem("usuario"));
-            const id = usuario._id;
-            console.log('id usuario listar ', id);
-            const res = await axios.get(`http://localhost:4000/enroll/listarMat/${id}`, {
+            const userId = usuario._id;
+            const res = await axios.get(`http://localhost:4000/enroll/listarMat`,{
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${localStorage.getItem("token")}`
+                },
+                params: {
+                    userId: userId
                 }
             });
-            console.log('res.data listar ', res.data.enrolledCourses);
-           if   (res.data.enrolledCourses) {
-            dispatch({
-                type: "GET_CURSOS_USUARIO",
-                payload: res.data.enrolledCourses
-            });
-           } else { 
-            dispatch({
-                type: "GET_CURSOS_USUARIO",
-                payload: []
-            });
-           }
+            console.log('res.data listar ', res.data.enrolledCourses[0].cursosAsignados);
+            if (res.data.enrolledCourses[0].cursosAsignados != null) {
+                dispatch({
+                    type: "GET_CURSOS_USUARIO",
+                    payload: res.data.enrolledCourses[0].cursosAsignados
+                });
+            } else {
+                dispatch({
+                    type: "GET_CURSOS_USUARIO",
+                    payload: []
+                });
+            }
         } catch (err) {
             console.error(err);
         }
     }
-
-
 
     return (
         <CursoContext.Provider
@@ -202,7 +217,9 @@ const CursoState = (props) => {
                 loading: state.loading,
                 error: state.error,
                 errorCurso: state.errorCurso,
+                message: state.message,
                 getCursos,
+                getCursosTeacher,
                 getCurso,
                 addCurso,
                 updateCurso,
@@ -214,7 +231,6 @@ const CursoState = (props) => {
             {props.children}
         </CursoContext.Provider>
     );
-
 }
 
 CursoState.propTypes = {

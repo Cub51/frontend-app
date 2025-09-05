@@ -2,7 +2,7 @@
 .formContainer {
   background-color: white;
   border-radius: 8px;
-  min-width: 300px;
+  min-width: 400px;
   width: 60%;
   max-width: 500px;
  
@@ -111,12 +111,25 @@
 
 .toast {
   transition-duration: 0.3s;
-  background-color: #6358dc75;
+  background-color: #447cff75;
   border-radius: 8px;
   width: 30%;
   text-align: center;
   position: absolute;
   bottom: 0;
+  margin-bottom: 15px;
+  padding: 10px;
+}
+
+.toast_user{
+  transition-duration: 0.5s;
+  background-color: #0066ff75;
+  color: white;
+  border-radius: 8px;
+  width: auto;
+  text-align: center;
+  position: absolute;
+  bottom: 1;
   margin-bottom: 15px;
   padding: 10px;
 }
@@ -190,8 +203,7 @@
   align-items: center;
   justify-content: center;
   
-  align-items: center;
-  background-color: #88a5ff;
+  background-color: #ffffff;//#88a5ff;
 }
 .container_generaal {//test
   margin-top: 50px;//50
@@ -200,7 +212,7 @@
   align-items: center;
   justify-content: center;
  // height: calc(100vh - 50px); // Ajusta la altura del contenedor según el tamaño de la pantalla
-  background-color: #88a5ff;
+  background-color: #f4f4f4;
 }
 
 
@@ -231,3 +243,34 @@
 }
 
 
+.container_curs__list {
+  //margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  width: 90vw;       /* ancho completo de la ventana */
+  max-width: 100vw;   /* asegura que no tenga límite */
+  padding: 0;         /* elimina padding que pueda limitar */
+  margin-left: 0;     /* elimina margen lateral */
+  margin-right: 0;    /* elimina margen lateral */
+
+  background-color: #f4f4f4;
+}
+
+.container_curs__list_est {
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  width: 90vw;       /* ancho completo de la ventana */
+  max-width: 100vw;   /* asegura que no tenga límite */
+  padding: 0;         /* elimina padding que pueda limitar */
+  margin-left: 0;     /* elimina margen lateral */
+  margin-right: 0;    /* elimina margen lateral */
+
+  background-color: #f4f4f4;
+}

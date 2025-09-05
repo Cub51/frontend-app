@@ -1,7 +1,7 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { useContext } from "react";
+// import { useContext } from "react";
 import UserLoginContext from "../../context/UserLogin/UserLoginContext";
 
 
@@ -23,22 +23,19 @@ const Login = () => {
   const { getloginUser } = useContext(UserLoginContext);
 
   const handleLogin = (user, token, rol) => {
-    {  
-      if ( user !== null && token !== null && rol !== null) {
+    {
+      if (user !== null && token !== null && rol !== null) {
         getloginUser(user, token, rol);
       }
     }
-   
   };
-
 
   const onChange = (e) => {
     setInputs({ ...inputs, [e.target.name]: e.target.value });
   };
 
-
   const onSubmit = async (e) => {
-    
+
     e.preventDefault();
     if (contrasena !== "" && correo !== "") {
       const Usuario = {
@@ -60,7 +57,7 @@ const Login = () => {
             const { token } = data;
             console.log("usuario vite", usuario);
             console.log("token vite", token);
-          
+
             // Almacenar en contexto && localStorage
             handleLogin(usuario, token, usuario.rol);
 
@@ -70,7 +67,7 @@ const Login = () => {
               setLoading(false);
               setMensaje("");
 
-              navigate(`/welcome/${data?.usuario?._id}`);
+              navigate(`/`);
             }, 1500);
           } else {
             setMensaje(data.message);
@@ -98,12 +95,15 @@ const Login = () => {
     }
   };
 
+  useEffect(() => {
+   
+  }, []);
 
 
   return (
-    <div className={styles.container_general}> 
+    <div className={styles.container_general}>
       <div className={styles.formContainer}>
-        <h3>Bienvenido Usuario Estudiantil</h3>
+        <h3>Bienvenido </h3>
         <h2>Inicia Sesión!</h2>
         <form onSubmit={(e) => onSubmit(e)}>
           <div className={styles.inputContainer}>

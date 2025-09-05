@@ -24,22 +24,25 @@ const NavigatorTop = () => {
             <Nav className="me-auto">
               <Nav.Link href="/">Area Personal</Nav.Link>
               <Nav.Link href="/courses/mycourses">Mis Cursos</Nav.Link>
-              <Nav.Link href="#link">Libreria</Nav.Link>
+              <Nav.Link href="#link" disabled>Libreria</Nav.Link>
               <NavDropdown title="Configuración" id="basic-nav-dropdown">
                 <NavDropdown.Item href="/profile">Perfil</NavDropdown.Item>
-                <NavDropdown.Item href="#action/3.2">
+             {/**    <NavDropdown.Item href="#action/3.2">
                   Dark Mode
                 </NavDropdown.Item>
-                <NavDropdown.Item href="/profile">Actualizar Perfil</NavDropdown.Item>
+            
+              *    <NavDropdown.Item href="/profile">Actualizar Perfil</NavDropdown.Item>
                 <NavDropdown.Item href="/profile">Actualizar Contraseña</NavDropdown.Item>
+              */}
                 <NavDropdown.Divider />
-                <NavDropdown.Item href="/logout">
+                <NavDropdown.Item href="/">
                 Cerrar Sesion
                 </NavDropdown.Item>
               </NavDropdown>
             </Nav>
           </Navbar.Collapse>
-          <Form className="d-flex">
+         {/**
+          *  <Form className="d-flex">
             <Form.Control
               type="search"
               placeholder="Search"
@@ -48,6 +51,7 @@ const NavigatorTop = () => {
             />
             <Button variant="outline-success">Search</Button>
           </Form>
+          */}
         </Container>
       
       </Navbar>

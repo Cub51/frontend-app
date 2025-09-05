@@ -1,17 +1,44 @@
-import { useState } from "react";
-import { FaHome,FaBars, FaUser, FaChalkboardTeacher, FaChalkboard, FaCogs, FaSignInAlt, FaSignOutAlt, FaUserPlus, FaTimes } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import { FaHome, FaBars, FaUser, FaChalkboardTeacher, FaChalkboard, FaCogs, FaSignInAlt, FaSignOutAlt, FaUserPlus, FaTimes } from "react-icons/fa";
 import { Button, Offcanvas, Nav } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 
 const NavigatorTop = () => {
   const [show, setShow] = useState(false);
+  const [userText, setUserText] = useState("");
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.clear(); // Elimina todo el localStorage
+    navigate("/", { replace: true }); // Redirige al inicio y reemplaza el historial
+  };
+
+
+  useEffect(() => {
+    // Obtener el objeto completo desde localStorage
+    const usuarioJSON = localStorage.getItem("usuario");
+
+    if (usuarioJSON) {
+      try {
+        const usuario = JSON.parse(usuarioJSON); // Parseamos el JSON
+        const nombre = usuario.nombre || "";
+        const rol = usuario.rol || "";
+
+        setUserText(`${rol} ${nombre}`); // Ej: "Profesor AAdd"
+      } catch (error) {
+        console.error("Error parseando localStorage:", error);
+      }
+    }
+  }, []);
+
   return (
     <>
-       <Button variant="dark" onClick={handleShow} className="menu-button d-flex align-items-center">
+      <Button variant="dark" onClick={handleShow} className="menu-button d-flex align-items-center">
         <FaBars />
         <span> Menu </span>
       </Button>
@@ -23,34 +50,32 @@ const NavigatorTop = () => {
         data-bs-theme="dark"
       >
         <Offcanvas.Header closeButton>
-          <Offcanvas.Title>UserName</Offcanvas.Title>
+          <Offcanvas.Title> {userText} </Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
           <Nav defaultActiveKey="/" className="flex-column">
             <Nav.Link
-               href="/"
-               style={{ padding: "10px" }}
-               onMouseEnter={(e) => (e.target.style.backgroundColor = "#6358dc")}
-               onMouseLeave={(e) => (e.target.style.backgroundColor = "#000")}
-             >
-               <FaHome /> Area Personal
+              href="/"
+              style={{ padding: "10px" }}
+              onMouseEnter={(e) => (e.target.style.backgroundColor = "#6358dc")}
+              onMouseLeave={(e) => (e.target.style.backgroundColor = "#000")}
+            ><FaHome /> Area Personal
             </Nav.Link>
 
             <Nav.Link
-               href="/courses"
-               style={{ padding: "10px" }}
-               onMouseEnter={(e) => (e.target.style.backgroundColor = "#6358dc")}
-               onMouseLeave={(e) => (e.target.style.backgroundColor = "#000")}
-             >
-               <FaChalkboardTeacher /> Cursos
+              href="/courses"
+              style={{ padding: "10px" }}
+              onMouseEnter={(e) => (e.target.style.backgroundColor = "#6358dc")}
+              onMouseLeave={(e) => (e.target.style.backgroundColor = "#000")}
+            >
+              <FaChalkboardTeacher /> Cursos
             </Nav.Link>
             <Nav.Link
-               href="/courses/mycourses"
-               style={{ padding: "10px" }}
-               onMouseEnter={(e) => (e.target.style.backgroundColor = "#6358dc")}
-               onMouseLeave={(e) => (e.target.style.backgroundColor = "#000")}
-             >
-<FaChalkboard />Mis Cursos
+              href="/courses/mycourses"
+              style={{ padding: "10px" }}
+              onMouseEnter={(e) => (e.target.style.backgroundColor = "#6358dc")}
+              onMouseLeave={(e) => (e.target.style.backgroundColor = "#000")}
+            ><FaChalkboard />Mis Cursos
             </Nav.Link>
 
             <Nav.Link
@@ -58,52 +83,49 @@ const NavigatorTop = () => {
               style={{ padding: "10px" }}
               onMouseEnter={(e) => (e.target.style.backgroundColor = "#6358dc")}
               onMouseLeave={(e) => (e.target.style.backgroundColor = "#000")}
-            >
-              <FaCogs /> Dibujo Tecnico
+            ><FaCogs /> Dibujo Tecnico
             </Nav.Link>
 
             <Nav.Link
-             href="/lab"
-             style={{ padding: "10px" }}
-             onMouseEnter={(e) => (e.target.style.backgroundColor = "#6358dc")}
-             onMouseLeave={(e) => (e.target.style.backgroundColor = "#000")}
-           >
-             <FaCogs /> Dibujo Libre
+              href="/lab"
+              style={{ padding: "10px" }}
+              onMouseEnter={(e) => (e.target.style.backgroundColor = "#6358dc")}
+              onMouseLeave={(e) => (e.target.style.backgroundColor = "#000")}
+            ><FaCogs /> Dibujo Libre
             </Nav.Link>
 
             <Nav.Link
               eventKey="link-2"
-              href="/users"
+              href="/usersList/students"
               style={{ padding: "10px" }}
               onMouseEnter={(e) => (e.target.style.backgroundColor = "#6358dc")}
               onMouseLeave={(e) => (e.target.style.backgroundColor = "#000")}
-            >
-              <FaUser /> Estudiante
+            ><FaUser /> Estudiante
             </Nav.Link>
+
             <Nav.Link
               eventKey="link-3"
-              href="/users"
+              href="/usersList/teachers"
               style={{
                 padding: "10px",
                 link: { hover: { backgroundColor: "#4235d6" } },
               }}
               onMouseEnter={(e) => (e.target.style.backgroundColor = "#6358dc")}
               onMouseLeave={(e) => (e.target.style.backgroundColor = "#000")}
-            >
-              <FaUser />
+            ><FaUser />
               Profesor
             </Nav.Link>
+
             <Nav.Link
               eventKey="link-4"
-              href="/users"
+              href="/usersList/admins"
               style={{
                 padding: "10px",
                 link: { hover: { backgroundColor: "#4235d6" } },
               }}
               onMouseEnter={(e) => (e.target.style.backgroundColor = "#6358dc")}
               onMouseLeave={(e) => (e.target.style.backgroundColor = "#000")}
-            >
-            < FaUserPlus />
+            >< FaUserPlus />
               Administrador
             </Nav.Link>
 
@@ -134,7 +156,7 @@ const NavigatorTop = () => {
             </Nav.Link>
 
             <Nav.Link
-              href="/register"
+              href="/"
               className="justify-content-end"
               style={{
                 padding: "10px",
@@ -142,22 +164,11 @@ const NavigatorTop = () => {
               }}
               onMouseEnter={(e) => (e.target.style.backgroundColor = "#6358dc")}
               onMouseLeave={(e) => (e.target.style.backgroundColor = "#000")}
+              onClick={handleLogout}
             >  <FaSignOutAlt />
               Cerrar Sesion
             </Nav.Link>
-            <Nav.Link
-              eventKey="disabled"
-              disabled
-              style={{
-                padding: "10px",
-                link: { hover: { backgroundColor: "#4235d6" } },
-              }}
-              onMouseEnter={(e) => (e.target.style.backgroundColor = "#6358dc")}
-              onMouseLeave={(e) => (e.target.style.backgroundColor = "#000")}
-            >
-            <FaTimes/>
-              Disabled
-            </Nav.Link>
+          
           </Nav>
         </Offcanvas.Body>
       </Offcanvas>

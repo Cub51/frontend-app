@@ -19,27 +19,25 @@ const Course = () => {
     getCurso,
     matricularseCurso,
     listarCursosMatriculados,
-} = useContext(CursoContext);
+  } = useContext(CursoContext);
 
   useEffect(() => {
     getCursos();
-listarCursosMatriculados();
+    listarCursosMatriculados();
   }, []);
 
 
   return (
 
-  <>
-    <div >    
-       <h1>Cursos</h1>
-       <div >
- 
-     
- { CardCourse(cursos)}
-       </div>
-     </div>
- 
-  </>
+      <div className={styles.container_generaal} >
+        <div className={styles.container_generaal}>
+          <h1>Cursos</h1>
+          <div>
+            {CardCourse(cursos)}
+          </div>
+        </div>
+      </div>
+
   );
 
 };

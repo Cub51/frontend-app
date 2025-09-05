@@ -17,7 +17,7 @@ const PracticaState = (props) => {
     };
     
     const [state, dispatch] = useReducer(PracticaReducer, initialState);
-    
+   
     // Get Practicas
     const getPracticas = async () => {
         try {
@@ -39,6 +39,7 @@ const PracticaState = (props) => {
 
     // Get Practica por curso
     const getPracticasByCurso = async (id) => {
+        console.log(' getPracticasByCurso  ');
         try {
         const res = await axios.get(`http://localhost:4000/practica/get-pr-by-curso/${id}`, {
           
@@ -104,7 +105,7 @@ const PracticaState = (props) => {
     // Get Practica
     const getPractica = async (id) => {
         try {
-        const res = await axios.get(`http://localhost:4000/practica/getPractica/${id}`, {
+        const res = await axios.get(`http://localhost:4000/practica/get-one-pr/${id}`, {
             headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${localStorage.getItem("token")}`
@@ -121,15 +122,15 @@ const PracticaState = (props) => {
     };
     
     // Add Practica
-    const addPractica = async (practica) => {
+    const addPractica = async (titulo, objetivo, actividad, estado, cursoId, createdAt) => {
         try {
-        const res = await axios.post('http://localhost:4000/practica/addPractica', practica, {
+        const res = await axios.post('http://localhost:4000/practica/create-practica-for-curse', {titulo, objetivo, actividad, estado, curso: cursoId, createdAt}, {
             headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${localStorage.getItem("token")}`
             }
         });
-       console.log('datos practica',res);
+       console.log('DTOOOSSSS practica',res);
         dispatch({
             type: "ADD_PRACTICA",
             payload: res.data
@@ -141,15 +142,60 @@ const PracticaState = (props) => {
     
     // Update Practica
     const updatePractica = async (practica) => {
+        {console.log('datos practica',practica)}
         try {
-        const res = await axios.put(`http://localhost:4000/practica/updatePractica/${practica._id}`, practica, {
+        const res = await axios.put(`http://localhost:4000/practicaEstado/update-pr`, {
             headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${localStorage.getItem("token")}`
-            }
+            },
+            body: (practica)
         });
-        const data = await res.json();
-
+       console.log("data practica update", res);
+     
+        dispatch({
+            type: "UPDATE_PRACTICA",
+            payload: res.data
+        });
+        }
+        catch (err) {
+        console.error(err);
+        }
+    }
+     // Update calificacion Practica
+     const updateCalificacionPractica = async (practicaEstadoId , calificacion) => {
+        {console.log('DATOSSSS practica',calificacion, " ", practicaEstadoId)}
+        try {
+        const res = await axios.put(`http://localhost:4000/practicaEstado/add-calificar-pr`,{calificacion, practicaEstadoId}, {
+            headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem("token")}`
+            },
+             
+        });
+        const data = await res;
+        {console.log('datos data',res.data.result)}
+        dispatch({
+            type: "UPDATE_PRACTICA",
+            payload: data.data.result
+        });
+        }
+        catch (err) {
+        console.error(err);
+        }
+    }
+       // Update comentario Practica
+       const updateComentarioPractica = async (practicaEstadoId , comentario) => {
+        {console.log('DATOSSSS comentario practica',comentario, " ", practicaEstadoId)}
+        try {
+        const res = await axios.put(`http://localhost:4000/practicaEstado/add-comentario-pr`,{comentario, practicaEstadoId}, {
+            headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem("token")}`
+            },
+        });
+        const data = await res;
+        {console.log('datos data',res)}
         dispatch({
             type: "UPDATE_PRACTICA",
             payload: data
@@ -224,6 +270,7 @@ const PracticaState = (props) => {
             practicas_course: state.practicas_course,
             practicas_course_estudiante: state.practicas_course_estudiante,
             practicas_user_teacher: state.practicas_user_teacher,
+            
             practica: state.practica,
             loading: state.loading,
             error: state.error,
@@ -238,6 +285,8 @@ const PracticaState = (props) => {
             getPracticasByEstudiante,
             getPracticasByProfesor,
             getPracticasEstadoByCurso,
+            updateCalificacionPractica,
+            updateComentarioPractica,
 
 
         }}

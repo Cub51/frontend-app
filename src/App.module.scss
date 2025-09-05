@@ -21,7 +21,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #88a5ff;
+  background-color: #ffffff;//#88a5ff;
 }
 
 .container_general {//test
@@ -31,7 +31,7 @@ body {
   align-items: center;
   justify-content: center;
   height: calc(100vh - 50px); // Ajusta la altura del contenedor según el tamaño de la pantalla
-  background-color: #88a5ff;
+  background-color: #000000;
 }
 
 *::selection {
@@ -62,7 +62,7 @@ body {
  //margin-top: 50px;
   overflow: hidden;
   transition: all 0.35s ease-in-out;
-  background-color: #6088ff
+  background-color: #8f8f8f
   ;
 }
 
